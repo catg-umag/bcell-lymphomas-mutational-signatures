@@ -26,10 +26,12 @@ hs_autosomes <- function() {
   return(chrs)
 }
 
+
 hs_linear <- function() {
   chrs <- c(1:22, "X", "Y")
   return(chrs)
 }
+
 
 ncbi <- function(x) {
   suppressMessages(GenomeInfoDb::seqlevelsStyle(x) <- "NCBI")
