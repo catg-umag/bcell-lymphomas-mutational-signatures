@@ -12,4 +12,4 @@ From: pytorch/pytorch:1.5.1-cuda10.1-cudnn7-runtime
     /opt/conda/bin/pip install --no-cache-dir SigProfilerExtractor==1.1.0
 
 %test
-    python3 -c "import SigProfilerExtractor"
+    /opt/conda/bin/python3 -c "import SigProfilerExtractor"
