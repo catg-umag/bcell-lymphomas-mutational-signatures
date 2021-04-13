@@ -1,0 +1,13 @@
+vcf_list: data/vcf_list.csv
+snv_list: data/snv_list.csv
+reference: data/hg38.2bit
+ig_list: data/iglist_hg38.bed
+nsignature_min: 2
+nsignatures_max: 5
+nsignatures_force: 3
+cosmic_genome: GRCh38
+cosmic_version: 3.2
+fitting_selected_signatures: SBS1,SBS3,SBS5,SBS6,SBS9,SBS84
+fitting_extra_signatures: data/extra_signatures.csv
+results_dir: results
+sigprofiler_cpus: 8
