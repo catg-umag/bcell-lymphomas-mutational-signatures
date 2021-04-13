@@ -1,18 +1,32 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl=2
+include { processParams } from './lib/nextflow/utils'
 
 
-vcf_list = file(params.vcf_list)
+/*
+ * Process params and prepare inputs
+ */
+params = processParams(params)
+
+vcf_list = params.vcf_list != null ? file(params.vcf_list) : null
+snv_list = params.snv_list != null ? file(params.snv_list) : null
 reference = file(params.reference)
 ig_list = file(params.ig_list)
 cosmic_config = [params.cosmic_version, params.cosmic_genome]
-fitting_selected_signatures = params.fitting.cosmic_selected_signatures
-extra_signatures = file(params.fitting.extra_signatures)
+fitting_selected_signatures = params.fitting_selected_signatures
+extra_signatures = file(params.fitting_extra_signatures)
+
 
 
 workflow {
-  vcfToCsv(vcf_list)
-  annotateVariants(vcfToCsv.out, reference, ig_list)
+  if (vcf_list != null) {
+    vcfToCsv(vcf_list)
+    variants_csv =  vcfToCsv.out
+  } else {
+    variants_csv = snv_list
+  }
+  
+  annotateVariants(variants_csv, reference, ig_list)
   sigProfiler(annotateVariants.out)
 
   runNotebook(
@@ -25,6 +39,9 @@ workflow {
 }
 
 
+/*
+ * Create a CSV file from the input VCF files
+ */
 process vcfToCsv {
   input:
   path vcf_list
@@ -39,11 +56,14 @@ process vcfToCsv {
 }
 
 
+/*
+ * Add metadata to variants (context, C/T mutationm, AID motifs, ig_locus)
+ */
 process annotateVariants {
-  publishDir 'results/', mode: 'copy'
+  publishDir "${params.results_dir}", mode: 'copy'
 
   input:
-  path snv_list
+  path 'snv_list_raw.csv'
   path reference
   path ig_list
 
@@ -57,10 +77,13 @@ process annotateVariants {
 }
 
 
+/*
+ * Run SigProfiler to extract signatures
+ */
 process sigProfiler {
-  publishDir 'results/extraction', mode: 'copy', pattern: 'out/*.csv', saveAs: { it - ~/^.*\// }
-  publishDir 'results/extraction', mode: 'copy', pattern: 'sigprofiler_out'
-  cpus 8  
+  publishDir "${params.results_dir}/extraction", mode: 'copy', pattern: 'out/*.csv', saveAs: { it - ~/^.*\// }
+  publishDir "${params.results_dir}/extraction", mode: 'copy', pattern: 'sigprofiler_out'
+  cpus "${params.sigprofiler_cpus}"
   
   input:
   path snv_list
@@ -70,26 +93,28 @@ process sigProfiler {
   tuple path('out/signatures.csv'), path('out/statistics.csv'), path('out/contributions.csv'), emit: results
   
   script:
-  force_signature = params.signature_extraction.force_n != null
-    ? "--force-nsignatures ${params.signature_extraction.force_n}"
+  force_signature = params.nsignatures_force != null
+    ? "--force-nsignatures ${params.nsignatures_force}"
     : ''
   """
-  make_mutational_matrix.py -i $snv_list -o mutational_matrix.tsv \
-    --tab-delimiter
+  make_mutational_matrix.py -i $snv_list -o mutational_matrix.tsv --tab-delimiter
 
   sig_profiler.py -i mutational_matrix.tsv \
     --output-dir out \
-    --min-signatures ${params.signature_extraction.minimum} \
-    --max-signatures ${params.signature_extraction.maximum} \
+    --min-signatures ${params.nsignatures_min} \
+    --max-signatures ${params.nsignatures_max} \
     --n-cpus ${task.cpus} \
     $force_signature
   """
 }
 
 
+/*
+ * Execute Jupyter Notebook with the data obtained from the extraction
+ */
 process runNotebook {
-  publishDir 'results/report', mode: 'copy', pattern: 'SignatureReport.*'
-  publishDir 'results/', mode: 'copy', pattern: 'output/*', saveAs: { it - ~/^output\// }
+  publishDir "${params.results_dir}/report", mode: 'copy', pattern: 'SignatureReport.*'
+  publishDir "${params.results_dir}", mode: 'copy', pattern: 'output/*', saveAs: { it - ~/^output\// }
 
   input:
   path 'data/snv_list.csv'

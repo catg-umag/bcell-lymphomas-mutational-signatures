@@ -35,6 +35,7 @@ def main():
 
     with open(args.input) as inf, open(args.output, "w") as outf:
         reader = csv.DictReader(inf)
+        columns += [x for x in reader.fieldnames if x not in columns]
         writer = csv.DictWriter(outf, fieldnames=columns)
 
         writer.writeheader()
