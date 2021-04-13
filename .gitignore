@@ -15,5 +15,6 @@ __pycache__/
 
 # Others
 .directory
+*.sif
 *.ignore.*
 output/

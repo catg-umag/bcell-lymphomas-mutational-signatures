@@ -5,7 +5,6 @@ from os import listdir, makedirs
 
 import pandas as pd
 from SigProfilerExtractor import sigpro as sig
-from scipy.sparse import base
 
 
 def main():
@@ -66,7 +65,7 @@ def parse_arguments():
     )
     parser.add_argument("--input", "-i", required=True, help="Input matrix (.csv)")
     parser.add_argument(
-        "--ouptut-dir",
+        "--output-dir",
         "-o",
         default="output",
         help="Output directory",

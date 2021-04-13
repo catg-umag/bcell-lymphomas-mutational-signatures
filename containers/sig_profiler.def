@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: pytorch/pytorch:1.5.1-cuda10.1-cudnn7-runtime
+
+
+%labels
+    Author Diego Alvarez (dialvarezs@gmail.com)
+    Description Contains SigProfilerExtractor (v1.1.0) and its dependencies
+
+%post
+    apt update && apt upgrade -y
+    conda install -y "numpy>=1.18.5"
+    pip install --no-cache-dir SigProfilerExtractor==1.1.0
+
+%test
+    python3 -c "import SigProfilerExtractor"

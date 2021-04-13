@@ -4,7 +4,7 @@ library(nnls)
 library(tidyverse)
 
 
-c_cosmic_signatures_urls <- "data/cosmic_signatures_urls.csv"
+c_cosmic_signatures_urls <- "https://gist.githubusercontent.com/dialvarezs/e71605deb84bf46d11b5ad84d7f7a414/raw/fe768b91d3f24fb7afe5c9a98cd83fb8362eb32c/cosmic_signatures_urls.csv"
 
 
 #' Makes mutation matrix with motiffs in rows and some group in columns
@@ -152,4 +152,14 @@ reconstruct_signatures <- function(signature, reference_signatures) {
 #' Calculates cosine distance between two vectors
 cosine_similarity <- function(x, y) {
   return(as.numeric(x %*% y / sqrt(x %*% x * y %*% y)))
+}
+
+
+#' Loads value from environment variable, with a default value
+get_var <- function(name, default) {
+  return(if (Sys.getenv(name) != "") {
+    Sys.getenv(name)
+  } else {
+    default
+  })
 }

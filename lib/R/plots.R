@@ -3,11 +3,14 @@ library(tidyverse)
 
 # constants
 c_palette_mut_pattern <- c("#68b272", "#47b6d7", "#da8a60", "#8d9aca", "#bbc769", "#a45d96")
-c_palette_signatures <- c("#7266ae", "#a09ece", "#B4617A", "#48C9B0")
-c_palette_signatures_ext <- c("#7266ae", "#A9A7D2", "#c6c4e1", "#bb7087", "#d2a0af", "#5aceb7", "#91decf")
+c_palette_signatures <- c("#7266ae", "#a09ece", "#b4617a", "#48c9b0", "#cfe7cb")
+c_palette_signatures_extended <- c(
+  "#7266ae", "#a9a7d2", "#c6c4e1", "#bb7087", "#d2a0af", "#5aceb7", "#91decf", "#cfe7cb", "#e2eaaa"
+)
+c_palette_aid_motifs <- c("#ef4767", "#1b9aaa", "#deb841", "#d3d3d3")
 c_grid_style <- element_line(
   size = 0.1, linetype = "solid",
-  colour = "#DDDDDD"
+  colour = "#dddddd"
 )
 
 #' Plots mutational patterns
@@ -15,12 +18,6 @@ c_grid_style <- element_line(
 #' @param data Dataframe containing: $substitution (X>Y), $context (X.Y), and samples (one each column)
 #' @param colorby Variable used to color the signature: sample or substitution
 plot_patterns_96 <- function(data, colorby = "substitution") {
-  colors <- if (colorby == "substitution") {
-    c_palette_mut_pattern
-  } else {
-    c_palette_signatures
-  }
-
   # convert the data to long format
   wl <- tidyr::gather(data, sample, count, -substitution, -context)
   wl$sample <- factor(wl$sample, levels = colnames(data)[-(1:2)]) # match input order
@@ -28,7 +25,6 @@ plot_patterns_96 <- function(data, colorby = "substitution") {
   p <- ggplot(wl) +
     geom_col(aes_string(x = "context", y = "count", fill = colorby), width = 0.75) +
     facet_grid(sample ~ substitution, scales = "free_y") +
-    scale_fill_manual(values = colors) +
     theme_minimal() +
     theme(
       panel.grid.major.x = element_blank(),
@@ -41,32 +37,50 @@ plot_patterns_96 <- function(data, colorby = "substitution") {
     xlab("Motif") +
     ylab("Contribution")
 
+  if (colorby == "substitution") {
+    p <- p + ggplot2::scale_fill_manual(values = c_palette_mut_pattern)
+  } else {
+    if (length(unique(wl$sample)) <= length(c_palette_signatures)) {
+      p <- p + ggplot2::scale_fill_manual(values = c_palette_signatures)
+    } else {
+      p <- p + ggplot2::scale_fill_viridis_d()
+    }
+  }
+
   return(p)
 }
 
 
 plot_signature_contributions <- function(data, from_extraction = TRUE) {
-  palette <- if (from_extraction) {
-    colorspace::lighten(c_palette_signatures, amount = 0.2)
-  } else {
-    c_palette_signatures_ext
-  }
+  nsignatures <- length(unique(data$signature))
 
   p <- ggplot(data = data, aes(x = sample, y = contribution, fill = signature)) +
     geom_col(width = 1) +
     theme_classic() +
-    scale_x_discrete(expand = c(0, 1.3)) +
+    scale_x_discrete(expand = c(0, 1)) +
     scale_y_continuous(limits = c(0, 1.001), expand = c(0, 0)) +
-    scale_fill_manual(values = palette) +
     theme(
       axis.ticks.x = element_blank(),
       axis.line.x = element_blank(),
       axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
       text = element_text(size = 9),
-      legend.position = "bottom"
+      legend.position = "bottom",
+      legend.title = element_blank()
     ) +
     ylab("Signature Contribution") +
-    xlab("Sample")
+    xlab("Sample") +
+    guides(fill = guide_legend(nrow = ceiling(nsignatures / 14)))
+
+  if (
+    (from_extraction && nsignatures > length(c_palette_signatures)) ||
+      (!from_extraction && nsignatures > length(c_palette_signatures_extended))
+  ) {
+    p <- p + ggplot2::scale_fill_viridis_d()
+  } else if (from_extraction) {
+    p <- p + ggplot2::scale_fill_manual(values = colorspace::lighten(c_palette_signatures, amount = 0.2))
+  } else {
+    p <- p + ggplot2::scale_fill_manual(values = c_palette_signatures_extended)
+  }
 
   return(p)
 }
@@ -86,7 +100,7 @@ plot_extraction_statistics <- function(data) {
       # Add a second axis and specify its features
       sec.axis = sec_axis(~ . * coeff, name = "Mean Sample Cosine Distance", breaks = seq(0, coeff, coeff / 4))
     ) +
-    xlab("Extracted signatures") +
+    xlab("Extracted Signatures") +
     scale_x_discrete(breaks = data$signatures, expand = c(0.05, 0.05)) +
     theme_minimal() +
     theme(
@@ -104,19 +118,33 @@ plot_extraction_statistics <- function(data) {
 plot_hclust <- function(data) {
   p <- fviz_dend(
     data,
-    cex = 0.2,
-    k = 3, # Cut in four groups, define in a previous step
-    k_colors = c("black", "black", "black"),
-    color_labels_by_k = TRUE, # color labels by groups
-    rect = TRUE,
+    cex = 0,
+    rect = FALSE,
     lwd = 0.35,
-    rect_border = c("#287091", "#7a4c64", "#CC2936"),
-    rect_fill = TRUE,
     show_labels = FALSE,
     labels_track_height = -0.5,
-    main = ""
+    main = "",
+    ylab = ""
   ) +
-    scale_x_continuous(expand = c(0, 1.3))
+    scale_x_continuous(expand = c(0, 1)) +
+    theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), plot.margin = unit(c(0, 0, -2, 0), "mm"))
+
+  return(p)
+}
+
+
+plot_aid_motifs <- function(data) {
+  p <- ggplot(data, aes(x = name, y = perc)) +
+    geom_col(aes(fill = aid_pattern), width = 0.85) +
+    theme_classic() +
+    coord_flip() +
+    scale_fill_manual(values = c_palette_aid_motifs, name = "AID Motif") +
+    scale_y_continuous(expand = c(0, 0)) +
+    theme(
+      axis.ticks.y = element_blank(),
+      axis.line.y = element_blank()
+    ) +
+    labs(y = "Percentage of Mutations", x = "")
 
   return(p)
 }
