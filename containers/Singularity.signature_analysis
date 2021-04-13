@@ -8,8 +8,8 @@ From: r-base:4.0.5
 
 %post
     apt update -y && apt upgrade -y
+    # install packages. use precompiled R packages to reduce container creation time
     apt install -y procps python3-pip \
-        # use precompiler R packages to reduce container creation time
         r-cran-cluster r-cran-cowplot r-cran-r.utils r-cran-factoextra r-cran-irkernel r-cran-nnls r-cran-tidyverse \
         r-cran-biocmanager r-bioc-bsgenome r-bioc-genomeinfodb r-bioc-variantannotation
 
