@@ -4,7 +4,7 @@ library(nnls)
 library(tidyverse)
 
 
-c_cosmic_signatures_urls <- "https://gist.githubusercontent.com/dialvarezs/e71605deb84bf46d11b5ad84d7f7a414/raw/fe768b91d3f24fb7afe5c9a98cd83fb8362eb32c/cosmic_signatures_urls.csv"
+c_cosmic_signatures_urls <- "https://raw.githubusercontent.com/CATG-UMAG/bcell-lymphomas-mutational-signatures/main/data/cosmic_signatures_urls.csv"
 
 
 #' Makes mutation matrix with motiffs in rows and some group in columns
@@ -73,7 +73,8 @@ format_mutation <- function(substitution, context) {
 
 #' Fits samples to a group of signature using deconstructSigs
 #'
-#' @param samples Dataframe
+#' @param samples Dataframe containing signatures to recreate with fitting columns: [mutation, samples...]
+#' @param reference_signatures Dataframe containing reference signatures columns: [mutation, samples...]
 fit_signatures <- function(samples, reference_signatures) {
   #' used to prepare the correct input for deconstructSigs
   prepare_for_fitting <- function(df) {
@@ -108,6 +109,9 @@ fit_signatures <- function(samples, reference_signatures) {
 }
 
 
+#' Hierarchical clustering of samples fitted using DIANA
+#'
+#' @param data Dataframe containing fitting information columns: [sample, signature, contribution]
 fitting_clustering <- function(data) {
   fitting_matrix <- data %>%
     tidyr::spread(signature, contribution) %>%
@@ -120,13 +124,19 @@ fitting_clustering <- function(data) {
 }
 
 
-reconstruct_signatures <- function(signature, reference_signatures) {
+#' Use a NNLS optimization to reconstruct a signature using combination of reference signatures
+#'
+#' @param signature Signature to reconstruct
+#' @param reference_signatures Dataframe with reference signatures (matrix format)
+#' @param n Number of signatures to combine for the reconstruction
+reconstruct_signatures <- function(signature, reference_signatures, n=2) {
   combinations <- combn(
-    names(signatures_cosmic) %>% purrr::discard(~ . %in% c("substitution", "context", "mutation")),
-    2
+    names(signatures_cosmic) %>%
+      purrr::discard(~ . %in% c("substitution", "context", "mutation")),
+    n
   )
 
-  results <- apply(combinations, 2, function(x) {
+  results <- apply(combinations, n, function(x) {
     selected_signatures <- as.matrix(reference_signatures[x])
     # solve NNLS
     result <- nnls(selected_signatures, signature)
