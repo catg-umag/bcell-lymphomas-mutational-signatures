@@ -1,2 +1,1 @@
-paper_results -linguist-detectable
-data -linguist-detectable
+paper_results/* linguist-generated=true
