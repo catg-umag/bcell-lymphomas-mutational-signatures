@@ -35,6 +35,7 @@ def main():
 
     with open(args.input) as inf, open(args.output, "w") as outf:
         reader = csv.DictReader(inf)
+        columns += [x for x in reader.fieldnames if x not in columns]
         writer = csv.DictWriter(outf, fieldnames=columns)
 
         writer.writeheader()
@@ -54,7 +55,7 @@ def annotate_variant(
     chrom = fmt_chrom(variant["chrom"])
     pos = int(variant["pos"])
 
-    # get contextggg
+    # get context
     context = reference[chrom][pos - 2 : pos + 1].upper()
 
     # get signature "canonic" mutation (ref C/T only)

@@ -13,7 +13,8 @@ c_grid_style <- element_line(
   colour = "#dddddd"
 )
 
-#' Plots mutational patterns
+
+#' Plot mutational patterns
 #'
 #' @param data Dataframe containing: $substitution (X>Y), $context (X.Y), and samples (one each column)
 #' @param colorby Variable used to color the signature: sample or substitution
@@ -51,6 +52,10 @@ plot_patterns_96 <- function(data, colorby = "substitution") {
 }
 
 
+#' Plot contributions (stacked barplot)
+#'
+#' @param data Dataframe, columns: [sample, signature, contribution]
+#' @param from_extraction If the signature are the extracted ones (only changes color palette)
 plot_signature_contributions <- function(data, from_extraction = TRUE) {
   nsignatures <- length(unique(data$signature))
 
@@ -86,6 +91,9 @@ plot_signature_contributions <- function(data, from_extraction = TRUE) {
 }
 
 
+#' Plot average stability and mean cosine distance metrics from signature extraction
+#'
+#' @param data Dataframe, columns: [signatures, stability, mean_cosine_distance]
 plot_extraction_statistics <- function(data) {
   coeff <- ceiling(max(data$mean_cosine_distance) / 0.04) * 0.04
   colors <- c(c_palette_signatures[1], c_palette_signatures[4])
@@ -115,6 +123,9 @@ plot_extraction_statistics <- function(data) {
 }
 
 
+#' Plot dendogram from hierarchical clustering
+#'
+#' @param data Matrix from cluster::diana()
 plot_hclust <- function(data) {
   p <- fviz_dend(
     data,
@@ -133,6 +144,9 @@ plot_hclust <- function(data) {
 }
 
 
+#' Plot distribution of AID motifs (horizontal stacked barplot)
+#'
+#' @param data Dataframe, columns: [name, aid_pattern, perc]
 plot_aid_motifs <- function(data) {
   p <- ggplot(data, aes(x = name, y = perc)) +
     geom_col(aes(fill = aid_pattern), width = 0.85) +
