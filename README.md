@@ -51,7 +51,7 @@ You have two options: starting from the VCFs or starting from a list of variants
 
 To run run the pipeline, execute:
 ```
-nextflow run CATG-UMAG/bcell-lymphomas-mutational-signatures <params>
+nextflow run CATG-UMAG/bcell-lymphomas-mutational-signatures -r main <params>
 ```
 
 In `<params>`, you need to provide inputs and other options. These are:
@@ -74,12 +74,12 @@ In `<params>`, you need to provide inputs and other options. These are:
 
 So, for example, a full execution command should look like this:
 ```
-nextflow run CATG-UMAG/bcell-lymphomas-mutational-signatures --snv_list data/snv_list.csv --reference data/hg38.2bit --ig_list data/iglist_hg38.bed --nsignatures_min 2 --nsignatures_max 10 --fitting_selected_signatures 'SBS1,SBS3,SBS5,SBS6,SBS9,SBS84'
+nextflow run CATG-UMAG/bcell-lymphomas-mutational-signatures -r main --snv_list data/snv_list.csv --reference data/hg38.2bit --ig_list data/iglist_hg38.bed --nsignatures_min 2 --nsignatures_max 10 --fitting_selected_signatures 'SBS1,SBS3,SBS5,SBS6,SBS9,SBS84'
 ```
 
 Alternatively, you can provide a yaml file containing all the parameters you want to setup (that way you don't have to write everything on the command line). Just download `params.example.yml` and edit it to your needs (you can delete parameters from the file if you don't want to use them). Then execute the pipeline like this:
 ```
-nextflow run CATG-UMAG/bcell-lymphomas-mutational-signatures --params-file params.yml
+nextflow run CATG-UMAG/bcell-lymphomas-mutational-signatures -r main --params-file params.yml
 ```
 
 You can also use any option available in Nextflow.
