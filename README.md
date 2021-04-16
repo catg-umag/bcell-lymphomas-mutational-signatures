@@ -58,13 +58,13 @@ In `<params>`, you need to provide inputs and other options. These are:
 
 | Parameter                       | Required | Default | Description                                                                                                                                                                                                                                |
 | ------------------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `--vcf_list`                    | yes*     |         | Input CSV if you want to start with the VCFs (according to previous section). Will be ignored if `--snv_list` is not empty.                                                                                                                |
+| `--vcf_list`                    | yes*     |         | Input CSV if you want to start with the VCFs (according to previous section). Ignored if `--snv_list` is not empty.                                                                                                                |
 | `--snv_list`                    | yes*     |         | Input CSV if you want to start with the list of variants (according to previous section).                                                                                                                                                  |
 | `--reference`                   | yes      |         | Reference in 2bit format. Must be the same used in the variant calling. For example: [hg19](http://hgdownload.cse.ucsc.edu/goldenpath/hg19/bigZips/hg19.2bit) or [hg38](https://hgdownload.cse.ucsc.edu/goldenpath/hg38/bigZips/hg38.2bit) |
 | `--ig_list`                     | yes      |         | Bed file containing the ranges for the Ig loci. Check `data/iglist_hg38.bed` for a example.                                                                                                                                                |
 | `--nsignatures_min`             | no       | 2       | Minimum number of signatures to test with sigprofiler.                                                                                                                                                                                     |
 | `--nsignatures_max`             | no       | 5       | Maximum number of signatures to test with sigprofiler.                                                                                                                                                                                     |
-| `--nsignatures_force`           | no       |         | Ignore the recomendation from SigProfiler regarding the optimal number of signatures, and a fixed number of signatures as final output. Must be a number between `nsignatures_min` and `nsignatures_min` values.                           |
+| `--nsignatures_force`           | no       |         | Ignore the recomendation from SigProfiler regarding the optimal number of signatures, and use a fixed number of signatures as final output. Must be a number between `nsignatures_min` and `nsignatures_max` values (both inclusive). |
 | `--cosmic_version`              | no       | 3.2     | Version of COSMIC signatures to use. Check `data/cosmic_signatures_urls.csv` for possible options.                                                                                                                                         |
 | `--cosmic_genome`               | no       | GRCh38  | COSMIC signatures genome. Check `data/cosmic_signatures_urls.csv` for possible options.                                                                                                                                                    |
 | `--fitting_selected_signatures` | no       |         | Select only a set of reference signatures for the fitting. The value should be a string containing valid signature names from the COSMIC version selected, separated by commas. Example: "SBS1,SBS3,SBS5,SBS6,SBS9,SBS84"                  |
@@ -74,7 +74,9 @@ In `<params>`, you need to provide inputs and other options. These are:
 
 So, for example, a full execution command should look like this:
 ```
-nextflow run CATG-UMAG/bcell-lymphomas-mutational-signatures -r main --snv_list data/snv_list.csv --reference data/hg38.2bit --ig_list data/iglist_hg38.bed --nsignatures_min 2 --nsignatures_max 10 --fitting_selected_signatures 'SBS1,SBS3,SBS5,SBS6,SBS9,SBS84'
+nextflow run CATG-UMAG/bcell-lymphomas-mutational-signatures -r main \
+  --snv_list data/snv_list.csv --reference data/hg38.2bit --ig_list data/iglist_hg38.bed \
+  --nsignatures_min 2 --nsignatures_max 10 --fitting_selected_signatures 'SBS1,SBS3,SBS5,SBS6,SBS9,SBS84'
 ```
 
 Alternatively, you can provide a yaml file containing all the parameters you want to setup (that way you don't have to write everything on the command line). Just download `params.example.yml` and edit it to your needs (you can delete parameters from the file if you don't want to use them). Then execute the pipeline like this:
