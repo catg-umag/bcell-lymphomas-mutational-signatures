@@ -1,6 +1,6 @@
 # Mutational Signatures in B-cell lymphomas
 
-Software repository for our paper "Integration of mutational signature analysis with 3D chromatin data unveils differential AID-related mutagenesis in B-cell lymphoma" (submitted), for reproducibility purposes.
+Software repository for our paper "Integration of mutational signature analysis with 3D chromatin data unveils differential AID-related mutagenesis in indolent lymphomas" (submitted), for reproducibility purposes.
 
 But if you want, you can use you own data too, everything is automated so it will be easy to run if you want a general landscape of mutational signatures in your samples.
 
