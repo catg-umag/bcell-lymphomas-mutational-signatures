@@ -81,6 +81,8 @@ process annotateVariants {
  * Run SigProfiler to extract signatures
  */
 process sigProfiler {
+  clusterOptions params.sigprofiler_gpu ? '--gres=gpu:1' : ''
+  containerOptions = params.sigprofiler_gpu ? '--nv' : ''
   publishDir "${params.results_dir}/extraction", mode: 'copy', pattern: 'out/*.csv', saveAs: { it - ~/^.*\// }
   publishDir "${params.results_dir}/extraction", mode: 'copy', pattern: 'sigprofiler_out'
   cpus "${params.sigprofiler_cpus}"
