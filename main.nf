@@ -51,7 +51,7 @@ process vcfToCsv {
 
   script:
   """
-  vcf_to_csv.py -i $vcf_list -o snv_list_raw.csv --autosomes-only 
+  vcf_to_csv.py -i ${vcf_list} -o snv_list_raw.csv --autosomes-only 
   """
 }
 
@@ -72,7 +72,7 @@ process annotateVariants {
 
   script:
   """
-  annotate_variants.py -i $snv_list -o snv_list.csv -r $reference -g $ig_list
+  annotate_variants.py -i ${snv_list} -o snv_list.csv -r ${reference} -g ${ig_list}
   """
 }
 
@@ -81,6 +81,8 @@ process annotateVariants {
  * Run SigProfiler to extract signatures
  */
 process sigProfiler {
+  clusterOptions params.sigprofiler_gpu ? '--gres=gpu:1' : ''
+  containerOptions = params.sigprofiler_gpu ? '--nv' : ''
   publishDir "${params.results_dir}/extraction", mode: 'copy', pattern: 'out/*.csv', saveAs: { it - ~/^.*\// }
   publishDir "${params.results_dir}/extraction", mode: 'copy', pattern: 'sigprofiler_out'
   cpus "${params.sigprofiler_cpus}"
@@ -93,6 +95,7 @@ process sigProfiler {
   tuple path('out/signatures.csv'), path('out/statistics.csv'), path('out/contributions.csv'), emit: results
   
   script:
+  use_gpu = params.sigprofiler_gpu ? "--use-gpu" : ''
   force_signature = params.nsignatures_force != null
     ? "--force-nsignatures ${params.nsignatures_force}"
     : ''
@@ -104,7 +107,8 @@ process sigProfiler {
     --min-signatures ${params.nsignatures_min} \
     --max-signatures ${params.nsignatures_max} \
     --n-cpus ${task.cpus} \
-    $force_signature
+    ${use_gpu} \
+    ${force_signature}
   """
 }
 
@@ -130,7 +134,7 @@ process runNotebook {
   script:
   pre = workflow.containerEngine == 'singularity' ? 'export HOME=""' : ''
   """
-  $pre
+  ${pre}
   export DATA_DIR=\${PWD}/data
   export OUTPUT_DIR=\${PWD}/output
   

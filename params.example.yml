@@ -11,3 +11,4 @@ fitting_selected_signatures:
 fitting_extra_signatures:
 results_dir: results
 sigprofiler_cpus: 8
+sigprofiler_gpu: False

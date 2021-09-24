@@ -25,7 +25,8 @@ def processParams(params) {
     fitting_selected_signatures: null,
     fitting_extra_signatures: 'NO_FILE',
     results_dir: 'results',
-    sigprofiler_cpus: 8
+    sigprofiler_cpus: 8,
+    sigprofiler_gpu: false
   ]
   defaults.each { name, default_value ->
     params[name] = getParamValue(params, name, default_value)
