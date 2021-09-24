@@ -129,7 +129,7 @@ fitting_clustering <- function(data) {
 #' @param signature Signature to reconstruct
 #' @param reference_signatures Dataframe with reference signatures (matrix format)
 #' @param n Number of signatures to combine for the reconstruction
-reconstruct_signatures <- function(signature, reference_signatures, n=2) {
+reconstruct_signatures <- function(signature, reference_signatures, n = 2) {
   combinations <- combn(
     names(signatures_cosmic) %>%
       purrr::discard(~ . %in% c("substitution", "context", "mutation")),

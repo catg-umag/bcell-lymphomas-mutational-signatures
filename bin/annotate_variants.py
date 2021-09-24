@@ -5,7 +5,6 @@ import re
 
 from twobitreader import TwoBitFile
 
-
 # AID patterns (3 nucleotides, reference C/T only), using "<R><A> <CCC>"" format
 AID_PATTERNS = {
     "RCY": re.compile(r"^CT [AG].[CT]$"),
@@ -76,9 +75,7 @@ def annotate_variant(
         aid_pattern = None
 
     # check if variant is in IG locus
-    in_ig = (
-        chrom in ig_locus and ig_locus[chrom][0] <= pos <= ig_locus[chrom][1]
-    )
+    in_ig = chrom in ig_locus and ig_locus[chrom][0] <= pos <= ig_locus[chrom][1]
 
     # reformat context and mutation
     context = re.sub(r"(.).(.)", "\\1.\\2", context)

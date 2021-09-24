@@ -51,7 +51,7 @@ def main():
     # copy contributions
     contrib_base_dir = f"sigprofiler_out/SBS96/{signature_dir}/Activities"
     contrib_file = next(
-        x for x in listdir(contrib_base_dir) if re.match(r"SBS96_.*_Activities.txt", x)
+        x for x in listdir(contrib_base_dir) if re.match(r"SBS96_.*_Activities.*.txt", x)
     )
     contrib_df = pd.read_csv(f"{contrib_base_dir}/{contrib_file}", sep="\t")
     contrib_df.columns = ["sample"] + [
