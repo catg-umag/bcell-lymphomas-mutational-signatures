@@ -18,6 +18,7 @@ def main():
         minimum_signatures=args.min_signatures,
         maximum_signatures=args.max_signatures,
         cpu=args.ncpus,
+        gpu=args.use_gpu,
     )
 
     signature_dir = (
@@ -99,6 +100,12 @@ def parse_arguments():
         default=1,
         help="Number of CPUs to use",
         dest="ncpus",
+    )
+    parser.add_argument(
+        "--use-gpu",
+        "-g",
+        action="store_true",
+        help="Use GPU for signature extraction",
     )
 
     return parser.parse_args()
