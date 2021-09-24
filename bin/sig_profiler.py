@@ -23,7 +23,7 @@ def main():
     signature_dir = (
         f"All_Solutions/SBS96_{args.forced_signatures}_Signatures"
         if args.forced_signatures
-        else "Suggested_Solution/SBS96_De_Novo_Solution"
+        else "Suggested_Solution/SBS96_De-Novo_Solution"
     )
     base_dir = f"sigprofiler_out/SBS96/{signature_dir}/Signatures"
 
