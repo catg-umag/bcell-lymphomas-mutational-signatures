@@ -11,6 +11,9 @@ jobs:
   build-and-push:
     name: Build Signature analysis container
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Check out repository
@@ -19,7 +22,7 @@ jobs:
       - name: Log into Container Registry
         uses: docker/login-action@v1
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GH_TOKEN }}
 
@@ -32,7 +35,7 @@ jobs:
           context: ./containers/signature_analysis
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ IMAGE_NAME }}:${{ DATE }}
-            ${{ env.REGISTRY }}/${{ IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DATE }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           build-args: |
-            VERSION=${{ DATE }}
+            VERSION=${{ env.DATE }}

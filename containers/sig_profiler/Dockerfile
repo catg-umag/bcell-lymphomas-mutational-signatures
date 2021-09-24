@@ -6,6 +6,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 LABEL author="Diego Alvarez (dialvarezs@gmail.com)"
 LABEL description="Contains SigProfilerExtractor and its dependencies"
 LABEL version=${VERSION}
+LABEL org.opencontainers.image.source https://github.com/catg-umag/bcell-lymphomas-mutational-signatures
 
 
 RUN apt-get update && apt-get upgrade -y && apt-get clean
