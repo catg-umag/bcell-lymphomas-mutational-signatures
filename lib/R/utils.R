@@ -38,7 +38,7 @@ make_mutation_table <- function(data, by, normalize = TRUE) {
 #'
 #' @param version COSMIC version (2.0, 3.0, 3.1, 3.2)
 #' @param genome Genome (GRCh37, GRCh38, mm9, mm10, rn6)
-#' @param type Signature typ (SBS, DBS, ID)
+#' @param type Signature type (SBS, DBS, ID)
 get_cosmic_signatures <- function(version = 3.2, genome = "GRCh38", type = "SBS") {
   urls_df <- read.csv(c_cosmic_signatures_urls)
 

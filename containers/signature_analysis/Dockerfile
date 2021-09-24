@@ -19,7 +19,7 @@ RUN apt-get install -y \
 	apt-get clean
 
 # install jupyter
-RUN pip3 install --no-cache jupyter jupyterlab nbconvert
+RUN pip3 install --no-cache-dir jupyter jupyterlab nbconvert
 
 COPY install_deps.r /root/install_deps.r
 RUN Rscript /root/install_deps.r

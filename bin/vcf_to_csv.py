@@ -86,7 +86,7 @@ def parse_arguments():
         "--autosomes-only",
         "-a",
         action="store_true",
-        help="keep only variatns from autosomes (1-22), imples --no-alt",
+        help="keep only variatns from autosomes (1-22), implies --no-alt",
         dest="autosomes_only",
     )
     parser.add_argument("--output", "-o", required=True, help="output CSV file")
