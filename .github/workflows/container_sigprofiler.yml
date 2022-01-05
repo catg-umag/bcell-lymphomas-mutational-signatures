@@ -1,6 +1,10 @@
 name: Publish SigProfiler image
 
 on:
+  push:
+      branches: [main]
+      paths:
+        - 'containers/sig_profiler/*'
   workflow_dispatch:
 
 env:

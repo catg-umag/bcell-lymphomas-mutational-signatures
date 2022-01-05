@@ -1,6 +1,10 @@
 name: Publish Signature analysis image
 
 on:
+  push:
+      branches: [main]
+      paths:
+        - 'containers/signature_analysis/*'
   workflow_dispatch:
 
 env:
