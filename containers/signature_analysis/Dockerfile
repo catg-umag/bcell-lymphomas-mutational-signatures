@@ -1,4 +1,4 @@
-FROM r-base:4.1.1
+FROM r-base:4.1.2
 
 ARG VERSION
 ARG DEBIAN_FRONTEND=noninteractive
