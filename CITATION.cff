@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+message: "If this repository was useful for you, please cite it as below."
+authors:
+- family-names: "Sepúlveda"
+  given-names: "Julieta"
+  orcid: "https://orcid.org/0000-0001-6354-3609"
+- family-names: "Alvarez"
+  given-names: "Diego"
+  orcid: "https://orcid.org/0000-0003-0753-274X"
+title: "Mutational Signatures in B-cell lymphomas"
+url: "https://github.com/catg-umag/bcell-lymphomas-mutational-signatures"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Sepulveda-Yanez"
+    given-names: "Julieta H."
+    orcid: "https://orcid.org/0000-0001-6354-3609"
+  - family-names: "Alvarez-Saravia"
+    given-names: "Diego"
+    orcid: "https://orcid.org/0000-0003-0753-274X"
+  - family-names: "Fernandez-Goycoolea"
+    given-names: "Jose"
+    orcid: "https://orcid.org/0000-0001-5349-4348"
+  - family-names: "Aldridge"
+    given-names: "Jacqueline"
+    orcid: "https://orcid.org/0000-0003-3491-6589"
+  - family-names: "M. van Bergen"
+    given-names: "Cornelis A."
+    orcid: "https://orcid.org/0000-0001-6386-4517"
+  - family-names: "Posthuma"
+    given-names: "Ward"
+  - family-names: "Uribe-Paredes"
+    given-names: "Roberto"
+    orcid: "https://orcid.org/0000-0001-9519-8862"
+  - family-names: "Veelken"
+    given-names: "Hendrik"
+    orcid: "https://orcid.org/0000-0002-9108-3125"
+  - family-names: "Navarrete"
+    given-names: "Marcelo A."
+    orcid: "https://orcid.org/0000-0002-2044-9548"
+  doi: "10.3390/ijms222313015"
+  journal: "International Journal of Molecular Sciences"
+  month: 12
+  start: 13015
+  title: "Integration of Mutational Signature Analysis with 3D Chromatin Data Unveils Differential AID-Related Mutagenesis in Indolent Lymphomas"
+  publisher:
+    name: "MDPI AG"
+  volume: 22
+  year: 2021

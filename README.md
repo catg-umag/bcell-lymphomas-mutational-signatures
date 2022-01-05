@@ -1,6 +1,6 @@
 # Mutational Signatures in B-cell lymphomas
 
-Software repository for our paper "Integration of mutational signature analysis with 3D chromatin data unveils differential AID-related mutagenesis in indolent lymphomas" (submitted), for reproducibility purposes.
+Software repository for our article [Integration of mutational signature analysis with 3D chromatin data unveils differential AID-related mutagenesis in indolent lymphomas](https://www.mdpi.com/1422-0067/22/23/13015), for reproducibility purposes.
 
 But if you want, you can use you own data too, everything is automated so it will be easy to run if you want a general landscape of mutational signatures in your samples.
 
@@ -102,6 +102,11 @@ Once the pipeline finished running you will find a set of files. These are:
 - `reconstruction/`: reconstruction of each one of the extracted denovo signatures using reference signatures 
 - `report/`: a summary of all the obtained information with plots, in `.html` for easy visualization and `.ipynb` (Jupyter Notebook) for editing
 
+## How to cite
+
+If this repository was useful for you, please cite it as below:
+
+Sepulveda-Yanez JH, Alvarez-Saravia D, Fernandez-Goycoolea J, Aldridge J, van Bergen CAM, Posthuma W, Uribe-Paredes R, Veelken H, Navarrete MA. Integration of Mutational Signature Analysis with 3D Chromatin Data Unveils Differential AID-Related Mutagenesis in Indolent Lymphomas. International Journal of Molecular Sciences. 2021; 22(23):13015. https://doi.org/10.3390/ijms222313015
 
 ## Acknowledgements
 
