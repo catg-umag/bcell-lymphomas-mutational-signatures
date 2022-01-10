@@ -38,12 +38,13 @@ preferred-citation:
   - family-names: "Navarrete"
     given-names: "Marcelo A."
     orcid: "https://orcid.org/0000-0002-2044-9548"
+  title: "Integration of Mutational Signature Analysis with 3D Chromatin Data Unveils Differential AID-Related Mutagenesis in Indolent Lymphomas"
   doi: "10.3390/ijms222313015"
   journal: "International Journal of Molecular Sciences"
-  month: 12
-  start: 13015
-  title: "Integration of Mutational Signature Analysis with 3D Chromatin Data Unveils Differential AID-Related Mutagenesis in Indolent Lymphomas"
   publisher:
     name: "MDPI AG"
   volume: 22
+  issue: 23
+  start: 13015
   year: 2021
+  month: 12
