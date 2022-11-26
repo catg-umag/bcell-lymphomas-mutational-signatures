@@ -34,7 +34,7 @@ jobs:
         run: echo "VERSION=$(cat ./containers/sig_profiler/VERSION)" >> $GITHUB_ENV
 
       - name: Build and push image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./containers/sig_profiler
           push: true
