@@ -8,8 +8,27 @@ include { processParams } from './lib/nextflow/utils'
  */
 params = processParams(params)
 
-vcf_list = params.vcf_list != null ? file(params.vcf_list) : null
-snv_list = params.snv_list != null ? file(params.snv_list) : null
+if (params.vcf_list != null) {
+  channel.fromPath(params.vcf_list, checkIfExists: true)
+    .splitCsv(header: true, sep: ',')
+    .map { [it.name, it.group, file(it.file)] }
+    .set { vcfs }
+
+  vcfs
+    .map { it[2] }
+    .collect()
+    .set { vcf_files }
+
+  vcfs
+    .map { [it[0], it[1], it[2].name].join(',') }
+    .collect()
+    .map { 'name,group,file\n' + it.join('\n') }
+    .collectFile(name: 'vcf_list.csv')
+    .set { vcf_list }
+} else {
+  vcf_list = null
+}
+snv_list = (params.snv_list != null) ? file(params.snv_list) : null
 reference = file(params.reference)
 ig_list = file(params.ig_list)
 cosmic_config = [params.cosmic_version, params.cosmic_genome]
@@ -20,7 +39,7 @@ extra_signatures = file(params.fitting_extra_signatures)
 
 workflow {
   if (vcf_list != null) {
-    vcfToCsv(vcf_list)
+    vcfToCsv(vcf_list, vcf_files)
     variants_csv =  vcfToCsv.out
   } else {
     variants_csv = snv_list
@@ -33,7 +52,7 @@ workflow {
     annotateVariants.out,
     sigProfiler.out.results,
     cosmic_config,
-    fitting_selected_signatures,
+    fitting_selected_signatures ?: '',
     extra_signatures
   )
 }
@@ -44,10 +63,11 @@ workflow {
  */
 process vcfToCsv {
   input:
-  path vcf_list
+  path(vcf_list)
+  path(vcf_files)
 
   output:
-  path 'snv_list_raw.csv'
+  path('snv_list_raw.csv')
 
   script:
   """
@@ -63,16 +83,16 @@ process annotateVariants {
   publishDir "${params.results_dir}", mode: 'copy'
 
   input:
-  path 'snv_list_raw.csv'
-  path reference
-  path ig_list
+  path('snv_list_raw.csv')
+  path(reference)
+  path(ig_list)
 
   output:
-  path 'snv_list.csv'
+  path('snv_list.csv')
 
   script:
   """
-  annotate_variants.py -i ${snv_list} -o snv_list.csv -r ${reference} -g ${ig_list}
+  annotate_variants.py -i snv_list_raw.csv -o snv_list.csv -r ${reference} -g ${ig_list}
   """
 }
 
@@ -88,10 +108,10 @@ process sigProfiler {
   cpus "${params.sigprofiler_cpus}"
   
   input:
-  path snv_list
+  path(snv_list)
   
   output:
-  path 'sigprofiler_out/'
+  path('sigprofiler_out/')
   tuple path('out/signatures.csv'), path('out/statistics.csv'), path('out/contributions.csv'), emit: results
   
   script:
@@ -121,15 +141,15 @@ process runNotebook {
   publishDir "${params.results_dir}", mode: 'copy', pattern: 'output/*', saveAs: { it - ~/^output\// }
 
   input:
-  path 'data/snv_list.csv'
+  path('data/snv_list.csv')
   tuple path('data/signatures.csv'), path('data/statistics.csv'), path('data/contributions.csv')
   tuple env(COSMIC_VERSION), env(COSMIC_GENOME)
-  env FITTING_REFERENCE_SIGNATURES
-  path 'data/extra_signatures.csv'
+  env(FITTING_REFERENCE_SIGNATURES)
+  path('data/extra_signatures.csv')
 
   output:
-  path 'SignatureReport.*'
-  path 'output/*'
+  path('SignatureReport.*')
+  path('output/*')
   
   script:
   pre = workflow.containerEngine == 'singularity' ? 'export HOME=""' : ''
