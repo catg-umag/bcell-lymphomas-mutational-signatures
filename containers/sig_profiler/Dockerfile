@@ -1,4 +1,4 @@
-FROM pytorch/pytorch:1.8.1-cuda10.2-cudnn7-runtime
+FROM pytorch/pytorch:1.12.1-cuda11.3-cudnn8-runtime
 
 ARG VERSION
 ARG DEBIAN_FRONTEND=noninteractive
